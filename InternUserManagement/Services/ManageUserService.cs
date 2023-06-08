@@ -67,7 +67,7 @@ namespace InternUserManagement.Services
             string? generatedPassword = await _passwordService.GeneratePassword(intern);
             intern.User.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(generatedPassword ?? "1234"));
             intern.User.PasswordKey = hmac.Key;
-            intern.User.Role = "Admin";
+            intern.User.Role = "Intern";
             intern.User.Status = "Not Approved";
             var userResult = await _userRepo.Add(intern.User);
             var internResult = await _internRepo.Add(intern);
