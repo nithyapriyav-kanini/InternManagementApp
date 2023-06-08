@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InternUserManagement.Services
 {
-    public class USerRepo : IRepo<int, User>
+    public class USerRepo : IRepo<int, User>,IFunction<User>
     {
         private readonly UserContext _context;
         private readonly ILogger<USerRepo> _logger;
@@ -59,7 +59,20 @@ namespace InternUserManagement.Services
             return null;
         }
 
-        public async Task<User?> Update(User item)
+        public async Task<User?> UpdatePassword(User item)
+        {
+            var user=await Get(item.Id);
+            if(user != null)
+            {
+                user.PasswordHash = item.PasswordHash;
+                user.PasswordKey = item.PasswordKey;
+                await _context.SaveChangesAsync();
+                return user;
+            }
+            return null;
+        }
+
+        public async Task<User?> UpdateStatus(User item)
         {
             var user = await Get(item.Id);
             if (user != null)

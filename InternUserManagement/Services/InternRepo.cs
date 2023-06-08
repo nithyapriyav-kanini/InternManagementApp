@@ -68,7 +68,7 @@ namespace InternUserManagement.Services
             return null;
         }
 
-        public async Task<Intern?> Update(Intern item)
+        /*public async Task<Intern?> Update(Intern item)
         {
             var intern = await Get(item.Id);
             if (intern != null)
@@ -90,7 +90,7 @@ namespace InternUserManagement.Services
                 }
             }
             return null;
-        }
+        }*/
     }
 }
 

@@ -43,6 +43,7 @@ builder.Services.AddScoped<IRepo<int, Intern>, InternRepo>();
 builder.Services.AddScoped<IGeneratePassword,GeneratePasswordService>();
 builder.Services.AddScoped<IManageUser, ManageUserService>();
 builder.Services.AddScoped<IGenerateToken, GenerateTokenService>();
+builder.Services.AddScoped<IFunction<User>,USerRepo>();
 
 
 var app = builder.Build();

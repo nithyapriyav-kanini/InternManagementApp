@@ -21,7 +21,7 @@ namespace InternUserManagement.Services
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.NameId,user.UserId.ToString()),
-                new Claim(ClaimTypes.Role,user.Role)
+                new Claim(ClaimTypes.Role,value: user.Role)
             };
             var cred = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256);
             var tokenDescription = new SecurityTokenDescriptor
