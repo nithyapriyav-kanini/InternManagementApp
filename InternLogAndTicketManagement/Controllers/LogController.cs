@@ -7,11 +7,11 @@ namespace InternLogAndTicketManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LogAndTicketController : ControllerBase
+    public class LogController : ControllerBase
     {
         private readonly ILogManageRepo _service;
 
-        public LogAndTicketController(ILogManageRepo service)
+        public LogController(ILogManageRepo service)
         {
             _service=service;
         }

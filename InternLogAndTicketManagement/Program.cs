@@ -1,7 +1,10 @@
 using InternLogAndTicketManagement.Interfaces;
 using InternLogAndTicketManagement.Models;
 using InternLogAndTicketManagement.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,8 +18,29 @@ builder.Services.AddDbContext<LogAndTicketContext>(opts =>
 {
     opts.UseSqlServer(builder.Configuration.GetConnectionString("Conn"));
 });
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenKey"])),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
+builder.Services.AddCors(opts =>
+{
+    opts.AddPolicy("AngularCORS", options =>
+    {
+        options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+    });
+});
 builder.Services.AddScoped<ILogRepo<Log, int>, LogRepo>();
 builder.Services.AddScoped<ILogManageRepo, LogAndTicketService>();
+builder.Services.AddScoped<ITicketRepo<Ticket, int>, TicketRepo>();
+builder.Services.AddScoped<ITicketRepo<Solution, int>, SolutionRepo>();
+builder.Services.AddScoped<ITicketAndSolutionRepo, LogAndTicketService>();
 
 var app = builder.Build();
 
@@ -27,6 +51,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseAuthentication();
+app.UseCors("AngularCORS");
 app.UseAuthorization();
 
 app.MapControllers();

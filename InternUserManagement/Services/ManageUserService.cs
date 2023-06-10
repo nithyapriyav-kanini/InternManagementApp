@@ -103,7 +103,7 @@ namespace InternUserManagement.Services
             }
             return user;
         }
-
+       
         public async Task<ICollection<Intern>> ShowAllInterns()
         {
             var result=await _internRepo.GetAll();
@@ -113,6 +113,5 @@ namespace InternUserManagement.Services
             }
             return null;
         }
-
     }
 }
