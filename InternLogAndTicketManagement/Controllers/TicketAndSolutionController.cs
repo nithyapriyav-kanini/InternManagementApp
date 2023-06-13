@@ -1,13 +1,14 @@
 ﻿using InternLogAndTicketManagement.Interfaces;
 using InternLogAndTicketManagement.Models;
-using InternLogAndTicketManagement.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InternLogAndTicketManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AngularCORS")]
     public class TicketAndSolutionController : ControllerBase
     {
         private readonly ITicketAndSolutionRepo _service;
@@ -17,13 +18,13 @@ namespace InternLogAndTicketManagement.Controllers
             _service=service;
         }
         
-        [HttpGet("one")]
-        /*[Authorize]*/
+        [HttpPost("GetOne")]
+        [Authorize]
         [ProducesResponseType(typeof(Ticket), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Ticket>> GetTicket(int key)
+        public async Task<ActionResult<Ticket>> GetTicket(Ticket ticket) 
         {
-            var result = await _service.GetTicket(key);
+            var result = await _service.GetTicket(ticket.Id);
             if (result != null)
             {
                 return Ok(result);
@@ -33,7 +34,7 @@ namespace InternLogAndTicketManagement.Controllers
 
         
         [HttpGet("All")]
-        /*[Authorize(Roles = "Admin")]*/
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(ICollection<Ticket>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ICollection<Ticket>>> GetAllTicket()
@@ -47,7 +48,7 @@ namespace InternLogAndTicketManagement.Controllers
         }
 
         [HttpGet("ByUser")]
-        /*[Authorize]*/
+        [Authorize]
         [ProducesResponseType(typeof(ICollection<Ticket>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ICollection<Ticket>>> GetByUser(int id)
@@ -61,11 +62,12 @@ namespace InternLogAndTicketManagement.Controllers
         }
 
         [HttpPost("Ticket")]
-        /*[Authorize]*/
+        [Authorize(Roles ="Intern")]
         [ProducesResponseType(typeof(Ticket), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Ticket>> RaiseTicket(Ticket ticket)
         {
+            ticket.IssueDate= DateTime.Now;
             var result = await _service.AddTicket(ticket);
             if (result != null)
             {
@@ -75,7 +77,7 @@ namespace InternLogAndTicketManagement.Controllers
         }
 
         [HttpPost("Solution")]
-        /*[Authorize(Roles ="Admin")]*/
+        [Authorize(Roles ="Admin")]
         [ProducesResponseType(typeof(Solution), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Ticket>> RaiseSolution(Solution solution)
@@ -89,7 +91,7 @@ namespace InternLogAndTicketManagement.Controllers
         }
 
         [HttpGet("Solution")]
-        /*[Authorize]*/
+        [Authorize]
         [ProducesResponseType(typeof(Solution), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Solution>> GetSolution(int key)
@@ -103,7 +105,7 @@ namespace InternLogAndTicketManagement.Controllers
         }
 
         [HttpGet("AllSolution")]
-        /*[Authorize]*/
+        [Authorize]
         [ProducesResponseType(typeof(ICollection<Solution>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ICollection<Solution>>> GetAllSolution()
@@ -115,5 +117,20 @@ namespace InternLogAndTicketManagement.Controllers
             }
             return BadRequest("Solutions not found");
         }
+
+        [HttpPost("ByTicket")]
+        /*[Authorize]*/
+        [ProducesResponseType(typeof(ICollection<Solution>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<ICollection<Solution>>> GetSolutionByTicket(Ticket ticket)
+        {
+            var result = await _service.GetSolutionByTicket(ticket.Id);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return BadRequest("Solutions not found");
+        }
+
     }
 }

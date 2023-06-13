@@ -1,12 +1,13 @@
 ﻿using InternLogAndTicketManagement.Interfaces;
 using InternLogAndTicketManagement.Models;
-using InternLogAndTicketManagement.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InternLogAndTicketManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AngularCORS")]
     public class LogController : ControllerBase
     {
         private readonly ILogManageRepo _service;
@@ -15,9 +16,10 @@ namespace InternLogAndTicketManagement.Controllers
         {
             _service=service;
         }
-        [HttpPost]
+        [HttpPost("InTime")]
         public async Task<ActionResult<Log>> InAndOut(Log item)
         {
+            item.LogInTime= DateTime.Now;
             var result = await _service.InAndOut(item);
             if (result != null)
             {
@@ -25,6 +27,18 @@ namespace InternLogAndTicketManagement.Controllers
             }
             return BadRequest("Can't register at this moment");
         }
+        [HttpPost("OutTime")]
+        public async Task<ActionResult<Log>> OutTime(Log item)
+        {
+            item.LogOutTime = DateTime.Now;
+            var result = await _service.OutTime(item);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return BadRequest("Can't register at this moment");
+        }
+
         [HttpGet("All")]
         public async Task<ActionResult<ICollection<Log>>> GetAll()
         {

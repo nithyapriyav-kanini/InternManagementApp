@@ -25,7 +25,7 @@ namespace InternLogAndTicketManagement.Services
         {
             return await _solutionrepo.Get(id);
         }
-        public async Task<ICollection<Solution>> GetSolutionByUser(int id)
+        public async Task<ICollection<Solution>> GetSolutionByTicket(int id)
         {
             return await _solutionrepo.GetById(id);
         }
@@ -76,6 +76,7 @@ namespace InternLogAndTicketManagement.Services
         {
             return _repo.Add(item);
         }
+        
         public async Task<ICollection<Log>> GetAll()
         {
             return await _repo.GetAll();
@@ -83,6 +84,11 @@ namespace InternLogAndTicketManagement.Services
         public async Task<ICollection<Log>> GetByUser(int key)
         {
             return await _repo.GetByUser(key);
+        }
+
+        public async Task<Log> OutTime(Log item)
+        {
+            return await _repo.Update(item);
         }
     }
 }

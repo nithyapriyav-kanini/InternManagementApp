@@ -56,7 +56,7 @@ namespace InternLogAndTicketManagement.Services
             List<Solution> result = new List<Solution>();
             foreach (var solution in solutions)
             {
-                if (solution.Id == key)
+                if (solution.TicketId == key)
                 {
                     result.Add(solution);
                 }

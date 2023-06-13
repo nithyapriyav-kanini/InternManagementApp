@@ -13,7 +13,7 @@ namespace InternLogAndTicketManagement.Interfaces
         public Task<Solution> AddSolution(Solution solution);
         public Task<Solution> RemoveSolution(int id);
         public Task<Solution> GetSolution(int id);
-        public Task<ICollection<Solution>> GetSolutionByUser(int id);
+        public Task<ICollection<Solution>> GetSolutionByTicket(int id);
         public Task<Solution> UpdateSolution(Solution solution);
         public Task<ICollection<Solution>> GetAllSolution();
     }

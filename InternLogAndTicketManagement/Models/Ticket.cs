@@ -9,6 +9,6 @@ namespace InternLogAndTicketManagement.Models
         public int? InternId { get; set; }
         public string? Title { get; set; }
         public string? Description { get; set; }
-        public DateTime? IssueDate { get; set; }
+        public DateTime IssueDate { get; set; }
     }
 }

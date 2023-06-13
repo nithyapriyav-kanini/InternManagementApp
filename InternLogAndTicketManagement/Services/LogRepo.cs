@@ -57,5 +57,17 @@ namespace InternLogAndTicketManagement.Services
             }
             return null;
         }
+
+        public async Task<Log> Update(Log item)
+        {
+            var log=_context.Logs.SingleOrDefault(l=>l.Id==item.Id);
+            if (log != null)
+            {
+                log.LogOutTime = item.LogOutTime;
+                await _context.SaveChangesAsync();
+                return log;
+            }
+            return null;
+        }
     }
 }
